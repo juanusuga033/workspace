@@ -1,0 +1,96 @@
+:root {
+  --bg-color: #c7c7c7;
+  --panel-bg: npm run#9e9e9e;
+  --text-color: #111111;
+  --border-color: #000000;
+  --button-bg: #e3e3e3;
+  --button-text: #111111;
+  --button-hover-bg: #000000;
+  --button-hover-text: #ffffff;
+  --input-bg: #fafafa;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+.App {
+  width: min(100%, 520px);
+  background: var(--panel-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: 1.9rem;
+}
+
+input[type='number'] {
+  width: 100%;
+  max-width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-color);
+}
+
+button {
+  padding: 12px 18px;
+  margin: 0 10px 10px 0;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover,
+button:focus-visible {
+  background: var(--button-hover-bg);
+  color: var(--button-hover-text);
+  transform: translateY(-1px);
+}
+
+button:last-of-type {
+  margin-right: 0;
+}
+
+h2 {
+  margin-top: 24px;
+}
+
+@media (max-width: 520px) {
+  .App {
+    padding: 22px;
+  }
+
+  button {
+    width: 100%;
+    margin-right: 0;
+  }
+}
