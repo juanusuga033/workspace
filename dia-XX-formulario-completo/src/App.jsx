@@ -1,121 +1,190 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
 
+const initialForm = {
+  nombre: '',
+  email: '',
+  password: '',
+  fechaNacimiento: '',
+  edad: '',
+  telefono: '',
+  carrera: 'informatica',
+  genero: 'femenino',
+  nivel: '3',
+  comentarios: '',
+  aceptoTerminos: false,
+  intereses: [],
+  foto: null,
+  color: '#4f46e5'
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [formData, setFormData] = useState(initialForm)
+  const [submitted, setSubmitted] = useState(null)
+
+  const handleChange = (event) => {
+    const { name, type, value, checked, files } = event.target
+
+    if (type === 'checkbox' && name === 'intereses') {
+      const selected = formData.intereses.includes(value)
+        ? formData.intereses.filter((item) => item !== value)
+        : [...formData.intereses, value]
+
+      setFormData((prev) => ({ ...prev, intereses: selected }))
+      return
+    }
+
+    if (type === 'checkbox') {
+      setFormData((prev) => ({ ...prev, [name]: checked }))
+      return
+    }
+
+    if (type === 'file') {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }))
+      return
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    setSubmitted({
+      ...formData,
+      foto: formData.foto ? formData.foto.name : 'No adjuntada'
+    })
+  }
+
+  const handleReset = () => {
+    setFormData(initialForm)
+    setSubmitted(null)
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+    <main className="page">
+      <section className="card">
+        <h1>Registro de estudiante</h1>
+        <p className="intro">
+          Este ejemplo usa varios tipos de elementos de formulario para registrar un estudiante.
+        </p>
+
+        <form onSubmit={handleSubmit} onReset={handleReset}>
+          <div className="grid">
+            <label>
+              Nombre completo
+              <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required />
+            </label>
+
+            <label>
+              Correo electrónico
+              <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            </label>
+
+            <label>
+              Contraseña
+              <input type="password" name="password" value={formData.password} onChange={handleChange} required />
+            </label>
+
+            <label>
+              Fecha de nacimiento
+              <input type="date" name="fechaNacimiento" value={formData.fechaNacimiento} onChange={handleChange} required />
+            </label>
+
+            <label>
+              Edad
+              <input type="number" name="edad" min="1" max="120" value={formData.edad} onChange={handleChange} required />
+            </label>
+
+            <label>
+              Teléfono
+              <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} required />
+            </label>
+          </div>
+
+          <div className="grid">
+            <label>
+              Carrera
+              <select name="carrera" value={formData.carrera} onChange={handleChange}>
+                <option value="informatica">Informática</option>
+                <option value="administracion">Administración</option>
+                <option value="contaduria">Contaduría</option>
+                <option value="diseño">Diseño</option>
+              </select>
+            </label>
+
+            <label>
+              Color favorito
+              <input type="color" name="color" value={formData.color} onChange={handleChange} />
+            </label>
+          </div>
+
+          <fieldset>
+            <legend>Género</legend>
+            <label className="inline">
+              <input type="radio" name="genero" value="femenino" checked={formData.genero === 'femenino'} onChange={handleChange} />
+              Femenino
+            </label>
+            <label className="inline">
+              <input type="radio" name="genero" value="masculino" checked={formData.genero === 'masculino'} onChange={handleChange} />
+              Masculino
+            </label>
+            <label className="inline">
+              <input type="radio" name="genero" value="otro" checked={formData.genero === 'otro'} onChange={handleChange} />
+              Otro
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Intereses</legend>
+            <label className="inline">
+              <input type="checkbox" name="intereses" value="deportes" checked={formData.intereses.includes('deportes')} onChange={handleChange} />
+              Deportes
+            </label>
+            <label className="inline">
+              <input type="checkbox" name="intereses" value="arte" checked={formData.intereses.includes('arte')} onChange={handleChange} />
+              Arte
+            </label>
+            <label className="inline">
+              <input type="checkbox" name="intereses" value="tecnologia" checked={formData.intereses.includes('tecnologia')} onChange={handleChange} />
+              Tecnología
+            </label>
+          </fieldset>
+
+          <label>
+            Nivel de conocimiento
+            <input type="range" name="nivel" min="1" max="5" value={formData.nivel} onChange={handleChange} />
+            <span className="range-value">{formData.nivel}/5</span>
+          </label>
+
+          <label>
+            Foto de perfil
+            <input type="file" name="foto" accept="image/*" onChange={handleChange} />
+          </label>
+
+          <label>
+            Comentarios
+            <textarea name="comentarios" rows="4" value={formData.comentarios} onChange={handleChange} />
+          </label>
+
+          <label className="inline checkbox">
+            <input type="checkbox" name="aceptoTerminos" checked={formData.aceptoTerminos} onChange={handleChange} />
+            Acepto los términos y condiciones
+          </label>
+
+          <div className="actions">
+            <button type="submit">Registrar estudiante</button>
+            <button type="reset" className="secondary">Limpiar</button>
+          </div>
+        </form>
+
+        {submitted && (
+          <section className="summary">
+            <h2>Datos enviados</h2>
+            <pre>{JSON.stringify(submitted, null, 2)}</pre>
+          </section>
+        )}
       </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    </main>
   )
 }
 
